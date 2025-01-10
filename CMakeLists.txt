@@ -26,11 +26,14 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra ${CMAKE_CXX_FLAGS}")
 ### get packages
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(catkin REQUIRED)
-catkin_package( #this automatically adds/installs the results of build
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-)
+# find_package(catkin REQUIRED)
+
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
+# catkin_package( #this automatically adds/installs the results of build
+#   INCLUDE_DIRS include
+#   LIBRARIES ${PROJECT_NAME}
+# )
 
 ### get packages' headers
 include_directories(
@@ -43,8 +46,10 @@ include_directories(
 ## Build ##
 ###########
 ### NanoFLANN
-add_library(nanoflann src/nanoflann.cc)
+ament_auto_add_library(nanoflann src/nanoflann.cc)
 target_link_libraries(nanoflann ${PCL_LIBRARIES})
 ### NanoGICP
-add_library(nano_gicp src/nano_gicp.cc)
+ament_auto_add_library(nano_gicp src/nano_gicp.cc)
 target_link_libraries(nano_gicp ${PCL_LIBRARIES} ${EIGEN3_LIBS} ${OpenMP_LIBS} nanoflann)
+
+ament_auto_package()
